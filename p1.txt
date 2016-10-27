@@ -1,0 +1,25 @@
+2)
+i = 1, j = 1, tm = inf, Sa = v[1]
+enquanto (i < n)
+	enquanto (i(i<=j e (Sa >= S))
+		se ((j-i+1) < tm ) entao 
+			tm = j-i+1
+		Sa = Sa - v[i]
+		i = i+1
+	fe
+	j = j+1
+	se (j < n) entao
+		Sa = Sa + v[j]
+fe
+
+3)
+Menores
+	CriaHeap(k)
+	para i de k+1 até n 
+		se (v[i] < v[1]) entao
+			troca(1, i)
+			DesceHeap(1,k)
+		fs
+	fp
+	Imprimir os k primeiros elemtentos de v
+fim
