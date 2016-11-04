@@ -1,6 +1,7 @@
-﻿--
+--
 --Feito por Alline Coelho e Luiz Andrade
 --
+
 local auxiliar = {}
 
 --trab06
@@ -15,7 +16,7 @@ local char = {
 local w = 80
 local h = 70
 
---trab07
+-- trabalho 07
 --closure criada para o movimento e posicionamento do personagem
 function moveChar (x,y)
 return{
@@ -25,17 +26,6 @@ return{
   return x,y
   end}
 end
-
-e1x = 100 
-e1
-
-e1 = coroutine.create(function (x,y)
-    if x == 0 and y == 0 then
-      return x,y
-    end
-    
-  end)
-
 
 local enemyW = 100
 local enemyH = 77
@@ -55,6 +45,56 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
+local limite = {x1 = 100, x2 = 300, y1 = 100, y2 = 300 }
+moveEneX = 200
+moveEneY = 200
+local enemyState = 0 
+
+
+-- trabalho 07
+--criação da corotina para o movimento do inimigo
+e1 = coroutine.create(function (x,y)
+
+    while true do
+    
+    if enemyState == 0 or enemyState == 4 then
+      moveEneX = moveEneX - x
+      if moveEneX < limite.x1 then
+        enemyState = 1
+      end
+      coroutine.yield()
+    end
+    
+    if enemyState == 1 then
+      moveEneY = moveEneY + y
+      if moveEneY > limite.y2 then
+        enemyState = 2
+      end
+      coroutine.yield()
+    end
+    
+    if enemyState == 2 then
+      moveEneX = moveEneX + x
+      if moveEneX > limite.x2 then
+        enemyState = 3
+      end
+      coroutine.yield()
+    end
+    
+    if enemyState == 3 then
+      moveEneY = moveEneY - y
+      if moveEneY < limite.y1 then
+        enemyState = 4
+      end
+      coroutine.yield()
+    end
+    
+    if enemyState == 5 then
+      coroutine.yield()
+    end
+  end
+  end)
+
 local deaths  = 0
 local isAlive = true
 local winGame = false
@@ -65,7 +105,7 @@ function love.load () -- ibagens
   --music = love.audio.newSource("encounter.mp3")
   --music:play()
   
-  --trab07
+  -- trabalho 07
   --criando o objeto para a fazer o personagem andar
   p1 = moveChar((love.graphics.getWidth() / 2) - 50,
                 (love.graphics.getHeight() - 150))
@@ -83,7 +123,7 @@ function love.load () -- ibagens
   char.image  = love.graphics.newImage('images/chargirl.png')
   explosion   = love.graphics.newImage('images/explosion.png')
 
-  for i=0, 10, 1 do
+  --[[for i=0, 10, 1 do
     newEnemy1 = { x = math.random()*800, y = math.random()*1000, img = enemyImg1 } -- inimigos por linha
     table.insert(enemies1, newEnemy1)
    end
@@ -91,7 +131,7 @@ function love.load () -- ibagens
   for i=0, 10, 1 do
     newEnemy2 = { x = math.random()*800, y = math.random()*1000, img = enemyImg2 } -- inimigos por linha
     table.insert(enemies2, newEnemy2)
-  end
+  end]]
 end
 
 function love.draw()
@@ -118,7 +158,7 @@ function love.draw()
     auxiliar.wins()
   end
 
-  for i, enemy in ipairs(enemies1) do
+  --[[for i, enemy in ipairs(enemies1) do
     if not enemy.exploding then --desenha normalmente se não tiver explodindo
       love.graphics.draw(enemy.img, enemy.x, enemy.y)
     else
@@ -127,16 +167,17 @@ function love.draw()
   end
   for i, enemy in ipairs(enemies2) do
     love.graphics.draw(enemy.img, enemy.x, enemy.y)
-  end
+  end]]
+  
+  
+  love.graphics.draw(eImg, moveEneX, moveEneY)
 
 end
 function love.update(dt)
 
   auxiliar.teclado(dt)
   
-  tot1 = 0
-  
-  coroutine.resume(e1)
+  coroutine.resume(e1,(dt*20000),(dt*20000))
 
   createEnemyTimer = createEnemyTimer - (1 * dt) -- respawn
   if createEnemyTimer < 0 then
@@ -145,26 +186,26 @@ function love.update(dt)
      --trab06
      --newEnemy1 é uma tupla, mas funciona como um registro na prática, já que a partir dele
      --são criados os inimigos do jogo seguindo o mesmo modelo inicial
-     newEnemy1 = { x = -100, y = 150 + math.random(300), img = enemyImg1 } -- inimigos por linha
-     table.insert(enemies1, newEnemy1)
+     --newEnemy1 = { x = -100, y = 150 + math.random(300), img = enemyImg1 } -- inimigos por linha
+     --table.insert(enemies1, newEnemy1)
 
      --trab06
      --newEnemy2 é uma tupla
-     newEnemy2 = {  x = 700, y = 150 + math.random(300), img = enemyImg2 } -- inimigos por linha
-     table.insert(enemies2, newEnemy2)
+     --newEnemy2 = {  x = 700, y = 150 + math.random(300), img = enemyImg2 } -- inimigos por linha
+     --table.insert(enemies2, newEnemy2)
    end
 
-  for i, enemy in ipairs(enemies1) do -- movimentos do inimigo
+  --[[for i, enemy in ipairs(enemies1) do -- movimentos do inimigo
     if not enemy.exploding then -- explosão não anda
       enemy.x = enemy.x + (200 * dt)
     end
   end
   for i, enemy in ipairs(enemies2) do -- movimentos do inimigo
     enemy.x = enemy.x - (200 * dt)
-  end
+  end]]
 
   local x,y = p1.move(0,0)
-  for i, enemy in ipairs(enemies1) do
+  --[[for i, enemy in ipairs(enemies1) do
   	if CheckCollision(enemy.x, enemy.y, enemyW, enemyH, x, y, w, h)
   	and isAlive then
   		table.remove(enemies1, i)
@@ -190,7 +231,14 @@ function love.update(dt)
         end
       end
     end
+]]
 
+  if CheckCollision(moveEneX, moveEneY, enemyW, enemyH, x, y, w, h)
+  	and isAlive then
+  		enemyState = 5
+  		isAlive = false
+      deaths = deaths + 1
+  end
 
 end
 
@@ -225,25 +273,25 @@ auxiliar.teclado = function(dt) -- movimentos possiveis do jogador
     if love.keyboard.isDown('a', 'left')then
       local x = p1.move(0,0)
       if x > 0 then
-        p1.move(-(dt * 100),0)
+        p1.move(-(dt * 1000),0)
       end
       
     elseif love.keyboard.isDown('d', 'right')then
       local x = p1.move(0,0)
       if x < (love.graphics.getWidth() - char.image:getWidth()) then
-        p1.move(dt * 100,0)
+        p1.move(dt * 1000,0)
       end
       
     elseif love.keyboard.isDown('w', 'up') then
       local _,y = p1.move(0,0)
       if y > 0 then
-        p1.move(0,-(dt * 100))
+        p1.move(0,-(dt * 1000))
       end
       
     elseif love.keyboard.isDown('s', 'down') then
       local _,y = p1.move(0,0)
       if y < (love.graphics.getHeight() - char.image:getHeight()) then
-        p1.move(0, dt * 100)
+        p1.move(0, dt * 1000)
       end
       
     end
@@ -276,4 +324,5 @@ auxiliar.restart = function() -- pe lanza
   createEnemyTimer = createEnemyTimerMax
   isAlive = true
   winGame = false
+  enemyState = 0
 end
