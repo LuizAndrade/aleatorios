@@ -17,7 +17,9 @@ local w = 80
 local h = 70
 
 -- trabalho 07
---closure criada para o movimento e posicionamento do personagem
+-- move é uma closure pois atende a todos os "requisitos":
+--  - é um subprograma dentro da função "moveChar".
+--  - o ambiente da closure é criado no momento que moveChar é criado.
 function moveChar (x,y)
 return{
   move = function(dx,dy)
@@ -46,8 +48,8 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 end
 
 local limite = {x1 = 100, x2 = 300, y1 = 100, y2 = 300 }
-moveEneX = 200
-moveEneY = 200
+local moveEneX = 200
+local moveEneY = 200
 local enemyState = 0 
 
 
@@ -106,7 +108,7 @@ function love.load () -- ibagens
   --music:play()
   
   -- trabalho 07
-  --criando o objeto para a fazer o personagem andar
+  -- criando o objeto "p1" e instanciando o ambiente
   p1 = moveChar((love.graphics.getWidth() / 2) - 50,
                 (love.graphics.getHeight() - 150))
 
@@ -215,6 +217,8 @@ auxiliar.teclado = function(dt) -- movimentos possiveis do jogador
 
   if not winGame then
     if love.keyboard.isDown('a', 'left')then
+      -- trabalho 07
+      -- chamada arbritária da closure
       local x = p1.move(0,0)
       if x > 0 then
         p1.move(-(dt * 1000),0)
