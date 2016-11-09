@@ -12,18 +12,16 @@ public class Exs10 {
         while(i<vetor.length){
             int cont = i;
             int soma = (vetor[cont] + vetor[cont+1]);
-            while(cont != vetor.length){
-                if(soma < S){
-                    cont++;
-                    soma = soma + vetor[cont+1];
-                }else if(soma > S){
-                    break;
-                }else{
+            while(soma <= S){
+                cont++;
+                soma = soma + vetor[cont+1];
+                if(soma == S) {
                     System.out.println("sequencia");
-                    soma = 0;
                     break;
                 }
+
             }
+            soma = 0;
             i++;
 
 
