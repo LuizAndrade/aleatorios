@@ -48,3 +48,12 @@ h(k + M)= (k+m)² mod M + 1
 		=(k² + 2kM + M²) mod M +1
 		=k² mod M + 2kM mod M+ m² mod M + 1
 		=k² mod M + 1 = h(k)
+		
+5) reconstrução de ABB 
+BACFGEIHD (pós ordem)
+
+			D
+		C		H
+	A        	   E	     I
+	    B		      G
+	    		     F
