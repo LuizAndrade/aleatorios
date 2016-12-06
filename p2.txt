@@ -17,3 +17,17 @@ fim
 
 2)maior caminho de uma arvore
 solução: passar todo pela esquerda, calculando a altura, idem pra direita
+
+3)cirar uma ABB contendo a sequencia de Farey
+solução: 
+
+inserir(0,0)
+inserir(1,1) --primeiros casos da sequencia
+para i de 1 ate n-2
+	para j de i+1 ate n-1
+		se(!busca(i,j))entao
+			inserir(i,j)
+	fp
+fp
+
+			
