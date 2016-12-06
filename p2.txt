@@ -1,0 +1,19 @@
+1)reconhecimento de arvores estritamente binarias
+
+RAEB(P)
+	se p == nulo entao retornar V
+ 	senao retornar
+		RAEB(p.ld) E RAEB(p.le) E ((p.le != nulo e p.ld != nulo) ou (p.ld == nulo e p.le == nulo))
+	fs
+fim
+
+main
+	se RAEB(t)
+		print 'sim'
+	senao
+		print 'nao'
+	fs
+fim
+
+2)maior caminho de uma arvore
+solução: passar todo pela esquerda, calculando a altura, idem pra direita
