@@ -49,54 +49,32 @@ end
 
 local limite = {x1 = 100, x2 = 300, y1 = 100, y2 = 300 }
 local moveEneX = 200
-local moveEneY = 200
-local enemyState = 0 
+local moveEneY = 100
 
 
 -- trabalho 07
 --criação da corotina para o movimento do inimigo
-e1 = coroutine.create(function (x,y)
-
+local function moveE1()
     while true do
     
-    if enemyState == 0 or enemyState == 4 then
-      moveEneX = moveEneX - x
-      if moveEneX < limite.x1 then
-        enemyState = 1
+      while (moveEneX > limite.x1 ) do 
+        coroutine.yield('left')
       end
-      coroutine.yield()
-    end
-    
-    if enemyState == 1 then
-      moveEneY = moveEneY + y
-      if moveEneY > limite.y2 then
-        enemyState = 2
+      
+      while (moveEneY < limite.y2  )do
+        coroutine.yield('down')
       end
-      coroutine.yield()
-    end
     
-    if enemyState == 2 then
-      moveEneX = moveEneX + x
-      if moveEneX > limite.x2 then
-        enemyState = 3
+      while (moveEneX < limite.x2 ) do
+        coroutine.yield('right')
       end
-      coroutine.yield()
-    end
     
-    if enemyState == 3 then
-      moveEneY = moveEneY - y
-      if moveEneY < limite.y1 then
-        enemyState = 4
+      while (moveEneY > limite.y1 ) do
+        coroutine.yield('up')
       end
-      coroutine.yield()
-    end
-    
-    if enemyState == 5 then
-      coroutine.yield()
     end
   end
-  end)
-
+  
 local deaths  = 0
 local isAlive = true
 local winGame = false
@@ -108,9 +86,13 @@ function love.load () -- ibagens
   --music:play()
   
   -- trabalho 07
-  -- criando o objeto "p1" e instanciando o ambiente
+  -- criando a closure e instanciando o ambiente.
+  -- upvalues: variaveis "x" e "y" de "moveChar"
+  
   p1 = moveChar((love.graphics.getWidth() / 2) - 50,
                 (love.graphics.getHeight() - 150))
+              
+  e1 = coroutine.wrap(moveE1)
 
   if arg[#arg] == "-debug" then require("mobdebug").start() end
 
@@ -152,6 +134,8 @@ function love.draw()
   end
   
   love.graphics.draw(eImg, moveEneX, moveEneY)
+  love.graphics.print('X: ' .. tostring(moveEneX), 50,25)
+  love.graphics.print('Y: ' .. tostring(moveEneY), 450,25)
 
 end
 function love.update(dt)
@@ -159,7 +143,14 @@ function love.update(dt)
   auxiliar.teclado(dt)
   
   -- trabalho 07
-  coroutine.resume(e1,(dt*20000),(dt*20000))
+  local mov = e1()
+  if       (mov == 'left')  then moveEneX = moveEneX - (dt*500)
+    elseif (mov == 'down')  then moveEneY = moveEneY + (dt*500)
+    elseif (mov == 'right') then moveEneX = moveEneX + (dt*500)
+    elseif (mov == 'up')    then moveEneY = moveEneY - (dt*500)
+  end
+
+  print(mov)
 
   createEnemyTimer = createEnemyTimer - (1 * dt) -- respawn
   if createEnemyTimer < 0 then
@@ -181,7 +172,6 @@ function love.update(dt)
   
   if CheckCollision(moveEneX, moveEneY, enemyW, enemyH, x, y, w, h)
   	and isAlive then
-  		enemyState = 5
   		isAlive = false
       deaths = deaths + 1
   end
@@ -253,7 +243,6 @@ auxiliar.wins = function() -- tela de vitoria
   love.graphics.setColor(255, 0, 0)
   enemies1 = {}
   enemies2 = {}
-  enemyState = 5
 end
 
 auxiliar.fonte = function() --
@@ -273,5 +262,4 @@ auxiliar.restart = function() -- pe lanza
   createEnemyTimer = createEnemyTimerMax
   isAlive = true
   winGame = false
-  enemyState = 0
 end
